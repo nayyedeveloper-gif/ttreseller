@@ -31,6 +31,7 @@ export interface Order {
   resellerId?: string; // Optional for assigning to resellers
   paymentStatus: 'Pending' | 'Paid' | 'Failed';
   paymentMethod: string;
+  tenantId: string;
 }
 
 export interface Reseller {
@@ -40,6 +41,7 @@ export interface Reseller {
   commissionRate: number;
   commissionEarned: number;
   avatarUrl: string;
+  tenantId: string;
 }
 
 export enum AiContentType {

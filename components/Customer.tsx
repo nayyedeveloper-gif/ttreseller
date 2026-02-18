@@ -2,9 +2,10 @@ import React, { useMemo } from 'react';
 import Card from './shared/Card';
 import { useOrderStore } from '../store/orderStore';
 import { Order } from '../types';
+import { getCurrentTenant } from '../utils';
 
 const Customer: React.FC = () => {
-  const orders = useOrderStore((state) => state.orders);
+  const orders = useOrderStore((state) => state.orders).filter(o => o.tenantId === getCurrentTenant());
 
   // Memoize customers computation
   const customers = useMemo(() => {

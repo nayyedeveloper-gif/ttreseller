@@ -3,11 +3,12 @@ import Card from './shared/Card';
 import { useProductStore } from '../store/productStore';
 import { useOrderStore } from '../store/orderStore';
 import { OrderStatus, OrderItem } from '../types';
+import { getCurrentTenant } from '../utils';
 
 const LiveCommentCatcher: React.FC = () => {
   const [comments, setComments] = useState('');
   const [detectedOrders, setDetectedOrders] = useState<any[]>([]);
-  const { products } = useProductStore();
+  const products = useProductStore((state) => state.products).filter(p => p.tenantId === getCurrentTenant());
   const { addOrder } = useOrderStore();
 
   const processComments = () => {

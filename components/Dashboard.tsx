@@ -7,13 +7,14 @@ import { useOrderStore } from '../store/orderStore';
 import { useProductStore } from '../store/productStore';
 import { useResellerStore } from '../store/resellerStore';
 import { OrderStatus } from '../types';
+import { getCurrentTenant } from '../utils';
 
 const COLORS = ['#4f46e5', '#f59e0b', '#10b981', '#ef4444'];
 
 const Dashboard: React.FC = () => {
-  const orders = useOrderStore((state) => state.orders);
-  const products = useProductStore((state) => state.products);
-  const resellers = useResellerStore((state) => state.resellers);
+  const orders = useOrderStore((state) => state.orders).filter(o => o.tenantId === getCurrentTenant());
+  const products = useProductStore((state) => state.products).filter(p => p.tenantId === getCurrentTenant());
+  const resellers = useResellerStore((state) => state.resellers).filter(r => r.tenantId === getCurrentTenant());
 
   // Memoize computed stats
   const totalRevenue = useMemo(() => orders.reduce((sum, o) => sum + o.total, 0), [orders]);

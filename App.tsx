@@ -7,6 +7,7 @@ import Orders from './components/Orders';
 import Commissions from './components/Commissions';
 import AiMarketing from './components/AiMarketing';
 import LiveCommentCatcher from './components/LiveCommentCatcher';
+import Customer from './components/Customer';
 import { HomeIcon, PackageIcon, ShoppingCartIcon, UsersIcon, SparklesIcon, MenuIcon, XIcon, AlertCircleIcon } from './components/shared/Icons';
 
 const Layout: React.FC = () => {
@@ -21,6 +22,7 @@ const Layout: React.FC = () => {
         { id: 'commissions', path: '/commissions', label: 'Commissions', icon: <UsersIcon className="h-5 w-5" /> },
         { id: 'ai_marketing', path: '/ai_marketing', label: 'AI Marketing', icon: <SparklesIcon className="h-5 w-5" /> },
         { id: 'live_comments', path: '/live_comments', label: 'Live Comments', icon: <AlertCircleIcon className="h-5 w-5" /> },
+        { id: 'customers', path: '/customers', label: 'Customers', icon: <UsersIcon className="h-5 w-5" /> },
     ];
 
     const currentPageLabel = navItems.find(item => item.path === location.pathname)?.label || 'Dashboard';
@@ -134,6 +136,7 @@ const App: React.FC = () => {
                     <Route path="commissions" element={<Commissions />} />
                     <Route path="ai_marketing" element={<AiMarketing />} />
                     <Route path="live_comments" element={<LiveCommentCatcher />} />
+                    <Route path="customers" element={<Customer />} />
                 </Route>
             </Route>
         </Routes>

@@ -1,0 +1,66 @@
+
+import React, { useState } from 'react';
+import { Order, OrderStatus } from '../types';
+import Card from './shared/Card';
+
+const mockOrders: Order[] = [
+  { id: 'ord1', customerName: 'Ma Thi Da', items: [], total: 23000, status: OrderStatus.Shipped, date: '2023-10-26' },
+  { id: 'ord2', customerName: 'Ko Aung Aung', items: [], total: 15000, status: OrderStatus.Processing, date: '2023-10-26' },
+  { id: 'ord3', customerName: 'Ma Hla Hla', items: [], total: 5000, status: OrderStatus.Pending, date: '2023-10-25' },
+  { id: 'ord4', customerName: 'U Ba', items: [], total: 38000, status: OrderStatus.Delivered, date: '2023-10-24' },
+  { id: 'ord5', customerName: 'Daw Mya', items: [], total: 12000, status: OrderStatus.Cancelled, date: '2023-10-23' },
+];
+
+const Orders: React.FC = () => {
+  const [orders, setOrders] = useState<Order[]>(mockOrders);
+
+  const getStatusColor = (status: OrderStatus) => {
+    switch (status) {
+      case OrderStatus.Pending: return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      case OrderStatus.Processing: return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case OrderStatus.Shipped: return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300';
+      case OrderStatus.Delivered: return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      case OrderStatus.Cancelled: return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  return (
+    <Card title="Order Management">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" className="px-6 py-3">Order ID</th>
+              <th scope="col" className="px-6 py-3">Customer</th>
+              <th scope="col" className="px-6 py-3">Date</th>
+              <th scope="col" className="px-6 py-3">Total (MMK)</th>
+              <th scope="col" className="px-6 py-3">Status</th>
+              <th scope="col" className="px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">#{order.id}</td>
+                <td className="px-6 py-4">{order.customerName}</td>
+                <td className="px-6 py-4">{order.date}</td>
+                <td className="px-6 py-4">{order.total.toLocaleString()}</td>
+                <td className="px-6 py-4">
+                  <span className={`px-2 py-1 font-semibold leading-tight rounded-full text-xs ${getStatusColor(order.status)}`}>
+                    {order.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4">
+                  <a href="#" className="font-medium text-indigo-600 dark:text-indigo-500 hover:underline">View</a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  );
+};
+
+export default Orders;

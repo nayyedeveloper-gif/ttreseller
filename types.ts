@@ -29,6 +29,8 @@ export interface Order {
   status: OrderStatus;
   date: string;
   resellerId?: string; // Optional for assigning to resellers
+  paymentStatus: 'Pending' | 'Paid' | 'Failed';
+  paymentMethod: string;
 }
 
 export interface Reseller {

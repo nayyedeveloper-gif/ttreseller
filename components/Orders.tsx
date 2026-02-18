@@ -5,7 +5,7 @@ import Card from './shared/Card';
 import { useOrderStore } from '../store/orderStore';
 
 const Orders: React.FC = () => {
-  const { orders, updateOrderStatus, deleteOrder } = useOrderStore();
+  const { orders, updateOrderStatus, updatePaymentStatus, deleteOrder } = useOrderStore();
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
@@ -29,6 +29,8 @@ const Orders: React.FC = () => {
               <th scope="col" className="px-6 py-3">Date</th>
               <th scope="col" className="px-6 py-3">Total (MMK)</th>
               <th scope="col" className="px-6 py-3">Status</th>
+              <th scope="col" className="px-6 py-3">Payment Status</th>
+              <th scope="col" className="px-6 py-3">Payment Method</th>
               <th scope="col" className="px-6 py-3">Action</th>
             </tr>
           </thead>
@@ -44,6 +46,18 @@ const Orders: React.FC = () => {
                     {order.status}
                   </span>
                 </td>
+                <td className="px-6 py-4">
+                  <select
+                    value={order.paymentStatus}
+                    onChange={(e) => updatePaymentStatus(order.id, e.target.value as 'Pending' | 'Paid' | 'Failed')}
+                    className="p-1 border border-gray-300 dark:border-gray-600 rounded text-sm dark:bg-gray-700 dark:text-white"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Failed">Failed</option>
+                  </select>
+                </td>
+                <td className="px-6 py-4">{order.paymentMethod}</td>
                 <td className="px-6 py-4">
                   <select
                     value={order.status}

@@ -48,6 +48,16 @@ const Dashboard: React.FC = () => {
   // Memoize reseller data
   const resellerData = useMemo(() => resellers.map(r => ({ name: r.name, commission: r.commissionEarned })), [resellers]);
 
+  const salesData = [
+    { name: 'Mon', sales: 4000 },
+    { name: 'Tue', sales: 3000 },
+    { name: 'Wed', sales: 2000 },
+    { name: 'Thu', sales: 2780 },
+    { name: 'Fri', sales: 1890 },
+    { name: 'Sat', sales: 2390 },
+    { name: 'Sun', sales: 3490 },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Stat Cards */}

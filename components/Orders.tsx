@@ -5,7 +5,10 @@ import Card from './shared/Card';
 import { useOrderStore } from '../store/orderStore';
 
 const Orders: React.FC = () => {
-  const { orders, updateOrderStatus, updatePaymentStatus, deleteOrder } = useOrderStore();
+  const orders = useOrderStore(state => state.orders);
+  const updateOrderStatus = useOrderStore(state => state.updateOrderStatus);
+  const updatePaymentStatus = useOrderStore(state => state.updatePaymentStatus);
+  const deleteOrder = useOrderStore(state => state.deleteOrder);
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {

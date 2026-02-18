@@ -62,7 +62,8 @@ const ProductForm: React.FC<{ product?: Product; onClose: () => void }> = ({ pro
 
 
 const Inventory: React.FC = () => {
-  const { products, deleteProduct } = useProductStore((state) => ({ products: state.products, deleteProduct: state.deleteProduct }));
+  const products = useProductStore(state => state.products);
+  const deleteProduct = useProductStore(state => state.deleteProduct);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   

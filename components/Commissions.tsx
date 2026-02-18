@@ -50,7 +50,8 @@ const ResellerForm: React.FC<{ reseller?: Reseller; onClose: () => void }> = ({ 
 
 
 const Commissions: React.FC = () => {
-  const { resellers, deleteReseller } = useResellerStore((state) => ({ resellers: state.resellers, deleteReseller: state.deleteReseller }));
+  const resellers = useResellerStore(state => state.resellers);
+  const deleteReseller = useResellerStore(state => state.deleteReseller);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingReseller, setEditingReseller] = useState<Reseller | null>(null);
 

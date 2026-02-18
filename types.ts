@@ -28,9 +28,10 @@ export interface Order {
   total: number;
   status: OrderStatus;
   date: string;
+  resellerId?: string; // Optional for assigning to resellers
 }
 
-export interface Seller {
+export interface Reseller {
   id: string;
   name: string;
   totalSales: number;

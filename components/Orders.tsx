@@ -1,18 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Order, OrderStatus } from '../types';
 import Card from './shared/Card';
-
-const mockOrders: Order[] = [
-  { id: 'ord1', customerName: 'Ma Thi Da', items: [], total: 23000, status: OrderStatus.Shipped, date: '2023-10-26' },
-  { id: 'ord2', customerName: 'Ko Aung Aung', items: [], total: 15000, status: OrderStatus.Processing, date: '2023-10-26' },
-  { id: 'ord3', customerName: 'Ma Hla Hla', items: [], total: 5000, status: OrderStatus.Pending, date: '2023-10-25' },
-  { id: 'ord4', customerName: 'U Ba', items: [], total: 38000, status: OrderStatus.Delivered, date: '2023-10-24' },
-  { id: 'ord5', customerName: 'Daw Mya', items: [], total: 12000, status: OrderStatus.Cancelled, date: '2023-10-23' },
-];
+import { useOrderStore } from '../store/orderStore';
 
 const Orders: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const { orders, updateOrderStatus, deleteOrder } = useOrderStore();
 
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
@@ -52,7 +45,21 @@ const Orders: React.FC = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <a href="#" className="font-medium text-indigo-600 dark:text-indigo-500 hover:underline">View</a>
+                  <select
+                    value={order.status}
+                    onChange={(e) => updateOrderStatus(order.id, e.target.value as OrderStatus)}
+                    className="mr-2 p-1 border border-gray-300 dark:border-gray-600 rounded text-sm dark:bg-gray-700 dark:text-white"
+                  >
+                    {Object.values(OrderStatus).map(status => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => deleteOrder(order.id)}
+                    className="px-2 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

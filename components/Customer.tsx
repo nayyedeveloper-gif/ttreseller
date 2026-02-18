@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Card from './shared/Card';
 import { useOrderStore } from '../store/orderStore';
 import { Order } from '../types';
@@ -6,20 +6,21 @@ import { Order } from '../types';
 const Customer: React.FC = () => {
   const orders = useOrderStore((state) => state.orders);
 
-  // Compute customers from orders
-  const customerMap: { [name: string]: { orders: Order[], total: number, lastDate: string } } = {};
-  orders.forEach(order => {
-    if (!customerMap[order.customerName]) {
-      customerMap[order.customerName] = { orders: [], total: 0, lastDate: order.date };
-    }
-    customerMap[order.customerName].orders.push(order);
-    customerMap[order.customerName].total += order.total;
-    if (order.date > customerMap[order.customerName].lastDate) {
-      customerMap[order.customerName].lastDate = order.date;
-    }
-  });
-
-  const customers = Object.entries(customerMap).map(([name, data]) => ({ name, ...data }));
+  // Memoize customers computation
+  const customers = useMemo(() => {
+    const customerMap: { [name: string]: { orders: Order[], total: number, lastDate: string } } = {};
+    orders.forEach(order => {
+      if (!customerMap[order.customerName]) {
+        customerMap[order.customerName] = { orders: [], total: 0, lastDate: order.date };
+      }
+      customerMap[order.customerName].orders.push(order);
+      customerMap[order.customerName].total += order.total;
+      if (order.date > customerMap[order.customerName].lastDate) {
+        customerMap[order.customerName].lastDate = order.date;
+      }
+    });
+    return Object.entries(customerMap).map(([name, data]) => ({ name, ...data }));
+  }, [orders]);
 
   return (
     <div className="space-y-6">

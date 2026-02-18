@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Card from './shared/Card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { DollarSignIcon, PackageIcon, ShoppingCartIcon, UsersIcon } from './shared/Icons';
@@ -15,44 +15,38 @@ const Dashboard: React.FC = () => {
   const products = useProductStore((state) => state.products);
   const resellers = useResellerStore((state) => state.resellers);
 
-  // Compute stats
-  const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
-  const numOrders = orders.length;
-  const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
-  const numResellers = resellers.length;
+  // Memoize computed stats
+  const totalRevenue = useMemo(() => orders.reduce((sum, o) => sum + o.total, 0), [orders]);
+  const numOrders = useMemo(() => orders.length, [orders]);
+  const totalStock = useMemo(() => products.reduce((sum, p) => sum + p.stock, 0), [products]);
+  const lowStockCount = useMemo(() => products.filter(p => p.stock < 10).length, [products]);
+  const numResellers = useMemo(() => resellers.length, [resellers]);
 
-  // Weekly sales (mock for now, in real app compute from orders)
-  const salesData = [
-    { name: 'Mon', sales: 4000 },
-    { name: 'Tue', sales: 3000 },
-    { name: 'Wed', sales: 2000 },
-    { name: 'Thu', sales: 2780 },
-    { name: 'Fri', sales: 1890 },
-    { name: 'Sat', sales: 2390 },
-    { name: 'Sun', sales: 3490 },
-  ];
-
-  // Top products from orders
-  const productSales: { [key: string]: number } = {};
-  orders.forEach(order => {
-    order.items.forEach(item => {
-      productSales[item.product.name] = (productSales[item.product.name] || 0) + item.quantity;
+  // Memoize top products data
+  const topProductsData = useMemo(() => {
+    const productSales: { [key: string]: number } = {};
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        productSales[item.product.name] = (productSales[item.product.name] || 0) + item.quantity;
+      });
     });
-  });
-  const topProductsData = Object.entries(productSales)
-    .sort(([,a], [,b]) => b - a)
-    .slice(0, 5)
-    .map(([name, sold]) => ({ name, sold }));
+    return Object.entries(productSales)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([name, sold]) => ({ name, sold }));
+  }, [orders]);
 
-  // Order status distribution
-  const statusCounts = orders.reduce((acc, order) => {
-    acc[order.status] = (acc[order.status] || 0) + 1;
-    return acc;
-  }, {} as { [key in OrderStatus]: number });
-  const orderStatusData = Object.entries(statusCounts).map(([status, count]) => ({ name: status, value: count }));
+  // Memoize order status data
+  const orderStatusData = useMemo(() => {
+    const statusCounts = orders.reduce((acc, order) => {
+      acc[order.status] = (acc[order.status] || 0) + 1;
+      return acc;
+    }, {} as { [key in OrderStatus]: number });
+    return Object.entries(statusCounts).map(([status, count]) => ({ name: status, value: count }));
+  }, [orders]);
 
-  // Reseller performance
-  const resellerData = resellers.map(r => ({ name: r.name, commission: r.commissionEarned }));
+  // Memoize reseller data
+  const resellerData = useMemo(() => resellers.map(r => ({ name: r.name, commission: r.commissionEarned })), [resellers]);
 
   return (
     <div className="space-y-6">
@@ -71,7 +65,7 @@ const Dashboard: React.FC = () => {
         <Card icon={<PackageIcon className="h-6 w-6 text-yellow-500"/>}>
           <p className="text-sm text-gray-500 dark:text-gray-400">Products in Stock</p>
           <p className="text-3xl font-bold">{totalStock}</p>
-          <p className="text-sm text-red-500 mt-1">{products.filter(p => p.stock < 10).length} items low stock</p>
+          <p className="text-sm text-red-500 mt-1">{lowStockCount} items low stock</p>
         </Card>
         <Card icon={<UsersIcon className="h-6 w-6 text-indigo-500"/>}>
           <p className="text-sm text-gray-500 dark:text-gray-400">Active Resellers</p>

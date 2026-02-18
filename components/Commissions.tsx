@@ -5,6 +5,7 @@ import Card from './shared/Card';
 import Modal from './shared/Modal';
 import { PlusIcon } from './shared/Icons';
 import { useResellerStore } from '../store/resellerStore';
+import { getCurrentTenant } from '../utils';
 
 const ResellerForm: React.FC<{ reseller?: Reseller; onClose: () => void }> = ({ reseller, onClose }) => {
     const addReseller = useResellerStore((state) => state.addReseller);

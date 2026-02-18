@@ -5,6 +5,7 @@ import Card from './shared/Card';
 import Modal from './shared/Modal';
 import { AlertCircleIcon, PlusIcon } from './shared/Icons';
 import { useProductStore } from '../store/productStore';
+import { getCurrentTenant } from '../utils';
 
 const ProductForm: React.FC<{ product?: Product; onClose: () => void }> = ({ product, onClose }) => {
     const addProduct = useProductStore((state) => state.addProduct);
